@@ -18,15 +18,16 @@ function ClockDots({ count }: { count: number }) {
 export function PrintLayout({ map }: PrintLayoutProps) {
   return (
     <div className="print-layout">
-      <header className="print-header">
-        <div className="print-title-frame">
-          <h1 className="print-title">{map.title || 'Untitled Map'}</h1>
-        </div>
-      </header>
-
       <div className="print-main">
-        <div className="print-map">
-          <HexGrid hexes={map.hexes} size={44} />
+        <div className="print-map-column">
+          <header className="print-header">
+            <div className="print-title-frame">
+              <h1 className="print-title">{map.title || 'Untitled Map'}</h1>
+            </div>
+          </header>
+          <div className="print-map">
+            <HexGrid hexes={map.hexes} size={44} />
+          </div>
         </div>
         <div className="print-descriptions">
           {map.hexes.map((hex) => (
