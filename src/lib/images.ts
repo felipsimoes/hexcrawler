@@ -5,6 +5,32 @@ export function isAcceptedImageType(type: string): boolean {
   return ACCEPTED_TYPES.includes(type)
 }
 
+export function urlToDataUrl(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      let { width, height } = img
+      const scale = Math.min(1, MAX_DIMENSION / Math.max(width, height))
+      width = Math.round(width * scale)
+      height = Math.round(height * scale)
+
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        reject(new Error('Could not process image.'))
+        return
+      }
+      ctx.drawImage(img, 0, 0, width, height)
+      resolve(canvas.toDataURL('image/png', 0.85))
+    }
+    img.onerror = () => reject(new Error('Could not load image.'))
+    img.src = url
+  })
+}
+
 export function resizeImageToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!isAcceptedImageType(file.type)) {

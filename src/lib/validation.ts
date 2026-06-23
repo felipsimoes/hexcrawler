@@ -1,8 +1,13 @@
 import type { Faction, HexCrawlerMap, HexCell } from '../types/map'
 import { EMPTY_TEMPLATE } from '../data/empty-template'
+import { isTileReference } from './tiles'
 
 function isStringArray(value: unknown, length: number): value is string[] {
   return Array.isArray(value) && value.length === length && value.every((v) => typeof v === 'string')
+}
+
+function isValidImageRef(value: string): boolean {
+  return value.startsWith('data:image/') || isTileReference(value)
 }
 
 function isHexCell(value: unknown): value is HexCell {
@@ -12,7 +17,8 @@ function isHexCell(value: unknown): value is HexCell {
     typeof hex.id === 'number' &&
     typeof hex.name === 'string' &&
     typeof hex.description === 'string' &&
-    (hex.imageDataUrl === null || typeof hex.imageDataUrl === 'string')
+    (hex.imageDataUrl === null ||
+      (typeof hex.imageDataUrl === 'string' && isValidImageRef(hex.imageDataUrl)))
   )
 }
 

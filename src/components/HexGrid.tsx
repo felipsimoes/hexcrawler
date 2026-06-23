@@ -7,6 +7,7 @@ import {
   getGridBounds,
   hexPolygonPoints,
 } from '../data/hex-layout'
+import { resolveImageSrc } from '../lib/tiles'
 import type { HexCell } from '../types/map'
 
 interface HexGridProps {
@@ -66,6 +67,7 @@ export function HexGrid({
         const points = hexPolygonPoints(cx, cy, drawSize)
         const isSelected = selectedHexId === pos.id
         const badge = badgePosition(cx, cy, drawSize, gridCenterX, gridCenterY)
+        const imageSrc = resolveImageSrc(hex?.imageDataUrl ?? null)
 
         return (
           <g
@@ -87,9 +89,9 @@ export function HexGrid({
             tabIndex={interactive ? 0 : undefined}
           >
             <polygon className="hex-cell__shape" points={points} />
-            {hex?.imageDataUrl ? (
+            {imageSrc ? (
               <image
-                href={hex.imageDataUrl}
+                href={imageSrc}
                 x={cx - drawSize}
                 y={cy - drawSize}
                 width={drawSize * 2}

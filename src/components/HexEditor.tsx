@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { resizeImageToDataUrl } from '../lib/images'
+import { resolveImageSrc } from '../lib/tiles'
 import type { HexCell } from '../types/map'
+import { TilePicker } from './TilePicker'
 
 interface HexEditorProps {
   hex: HexCell
@@ -10,6 +12,7 @@ interface HexEditorProps {
 
 export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
   const fileRef = useRef<HTMLInputElement>(null)
+  const previewSrc = resolveImageSrc(hex.imageDataUrl)
 
   const handleImageUpload = async (file: File | undefined) => {
     if (!file) return
@@ -26,8 +29,8 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
       <h2>Hex {hex.id}</h2>
       <div className="hex-editor__image-row">
         <div className="hex-editor__preview">
-          {hex.imageDataUrl ? (
-            <img src={hex.imageDataUrl} alt={`Hex ${hex.id} artwork`} />
+          {previewSrc ? (
+            <img src={previewSrc} alt={`Hex ${hex.id} artwork`} />
           ) : (
             <div className="hex-editor__preview-empty">No image</div>
           )}
@@ -44,7 +47,7 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
             }}
           />
           <button type="button" onClick={() => fileRef.current?.click()}>
-            Upload image
+            Upload custom image
           </button>
           {hex.imageDataUrl && (
             <button type="button" className="btn-secondary" onClick={() => onChange({ imageDataUrl: null })}>
@@ -53,6 +56,7 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
           )}
         </div>
       </div>
+      <TilePicker selectedValue={hex.imageDataUrl} onSelect={(imageDataUrl) => onChange({ imageDataUrl })} />
       <label className="field">
         <span>Name</span>
         <input

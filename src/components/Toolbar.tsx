@@ -48,7 +48,14 @@ export function Toolbar({
         <button type="button" onClick={() => importRef.current?.click()}>
           Import
         </button>
-        <button type="button" onClick={() => exportMap(map)}>
+        <button
+          type="button"
+          onClick={() => {
+            void exportMap(map).catch((err) =>
+              onError(err instanceof Error ? err.message : 'Export failed.'),
+            )
+          }}
+        >
           Export
         </button>
         <button type="button" className="btn-secondary" onClick={() => confirmAndNew(EMPTY_TEMPLATE, 'blank')}>

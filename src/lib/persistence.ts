@@ -1,4 +1,6 @@
 import type { HexCrawlerMap } from '../types/map'
+import { urlToDataUrl } from './images'
+import { isTileReference, resolveImageSrc } from './tiles'
 import { validateMap } from './validation'
 
 const STORAGE_KEY = 'hexcrawler-draft'
@@ -34,8 +36,26 @@ export function sanitizeFilename(title: string): string {
   return slug || 'hexcrawl-map'
 }
 
-export function exportMap(map: HexCrawlerMap): void {
-  const json = JSON.stringify(map, null, 2)
+export async function embedTileReferences(map: HexCrawlerMap): Promise<HexCrawlerMap> {
+  const hexes = await Promise.all(
+    map.hexes.map(async (hex) => {
+      if (!hex.imageDataUrl || !isTileReference(hex.imageDataUrl)) return hex
+      const url = resolveImageSrc(hex.imageDataUrl)
+      if (!url) return { ...hex, imageDataUrl: null }
+      try {
+        const dataUrl = await urlToDataUrl(url)
+        return { ...hex, imageDataUrl: dataUrl }
+      } catch {
+        return hex
+      }
+    }),
+  )
+  return { ...map, hexes }
+}
+
+export async function exportMap(map: HexCrawlerMap): Promise<void> {
+  const embedded = await embedTileReferences(map)
+  const json = JSON.stringify(embedded, null, 2)
   const blob = new Blob([json], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
