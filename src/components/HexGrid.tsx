@@ -1,4 +1,5 @@
 import {
+  HEX_BADGE_RADIUS,
   HEX_GAP,
   HEX_POSITIONS,
   HEX_SIZE,
@@ -31,7 +32,7 @@ export function HexGrid({
   const { t } = useI18n()
   const hexMap = new Map(hexes.map((h) => [h.id, h]))
   const bounds = getGridBounds(size)
-  const padding = 8
+  const padding = 4
   const viewWidth = bounds.width + padding * 2
   const viewHeight = bounds.height + padding * 2
   const offsetX = -bounds.minX + padding
@@ -117,7 +118,7 @@ export function HexGrid({
             )}
             <polygon className="hex-cell__border" points={points} />
             <g className="hex-cell__badge">
-              <circle cx={badge.x} cy={badge.y} r={10} />
+              <circle cx={badge.x} cy={badge.y} r={HEX_BADGE_RADIUS} />
               <text x={badge.x} y={badge.y + 4} textAnchor="middle">
                 {pos.id}
               </text>

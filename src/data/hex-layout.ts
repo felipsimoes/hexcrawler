@@ -63,6 +63,8 @@ export const HEX_POSITIONS: HexPosition[] = buildHexPositions()
 
 export const HEX_SIZE = 52
 export const HEX_GAP = 0
+export const HEX_BADGE_RADIUS = 10
+export const HEX_BADGE_OUTSET = 11
 
 /** Pointy-top hex vertices (point at top and bottom). */
 export function hexPolygonPoints(cx: number, cy: number, size: number): string {
@@ -77,19 +79,34 @@ export function hexPolygonPoints(cx: number, cy: number, size: number): string {
 }
 
 export function getGridBounds(size: number) {
+  const halfWidth = (Math.sqrt(3) / 2) * size
+  const halfHeight = size
+  const badgeR = HEX_BADGE_RADIUS + 2
+
   let minX = Infinity
   let maxX = -Infinity
   let minY = Infinity
   let maxY = -Infinity
-  const halfWidth = (Math.sqrt(3) / 2) * size
-  const halfHeight = size
+  const centers: Array<{ x: number; y: number }> = []
 
   for (const pos of HEX_POSITIONS) {
     const { x, y } = axialToPixel(pos.q, pos.r, size)
+    centers.push({ x, y })
     minX = Math.min(minX, x - halfWidth)
     maxX = Math.max(maxX, x + halfWidth)
     minY = Math.min(minY, y - halfHeight)
     maxY = Math.max(maxY, y + halfHeight)
+  }
+
+  const gridCenterX = (minX + maxX) / 2
+  const gridCenterY = (minY + maxY) / 2
+
+  for (const { x, y } of centers) {
+    const badge = badgePosition(x, y, size, gridCenterX, gridCenterY)
+    minX = Math.min(minX, x - halfWidth, badge.x - badgeR)
+    maxX = Math.max(maxX, x + halfWidth, badge.x + badgeR)
+    minY = Math.min(minY, y - halfHeight, badge.y - badgeR)
+    maxY = Math.max(maxY, y + halfHeight, badge.y + badgeR)
   }
 
   return { minX, maxX, minY, maxY, width: maxX - minX, height: maxY - minY }
@@ -105,7 +122,7 @@ export function badgePosition(
 ): { x: number; y: number } {
   const dx = cx - gridCenterX
   const dy = cy - gridCenterY
-  const dist = size + 11
+  const dist = size + HEX_BADGE_OUTSET
 
   if (Math.hypot(dx, dy) < size * 0.15) {
     return { x: cx, y: cy - dist }
