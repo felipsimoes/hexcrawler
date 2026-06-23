@@ -1,7 +1,7 @@
 import { useState } from 'react'
+import { useI18n } from '../i18n'
 import {
   TILE_CATEGORIES,
-  categoryLabel,
   getTilesByCategory,
   isTileReference,
   toTileReference,
@@ -13,16 +13,23 @@ interface TilePickerProps {
 }
 
 export function TilePicker({ selectedValue, onSelect }: TilePickerProps) {
+  const { t } = useI18n()
   const [category, setCategory] = useState(TILE_CATEGORIES[0] ?? 'foundation')
   const tiles = getTilesByCategory(category)
 
   const selectedTileId =
     selectedValue && isTileReference(selectedValue) ? selectedValue.slice('tile:'.length) : null
 
+  const categoryLabel = (cat: string) => {
+    const key = `tiles.${cat}` as const
+    const translated = t(key)
+    return translated === key ? cat : translated
+  }
+
   return (
     <div className="tile-picker">
       <div className="tile-picker__header">
-        <span className="tile-picker__label">Choose a tile</span>
+        <span className="tile-picker__label">{t('tilePicker.choose')}</span>
         <div className="tile-picker__categories">
           {TILE_CATEGORIES.map((cat) => (
             <button

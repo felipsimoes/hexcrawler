@@ -9,6 +9,34 @@ function makeHexes() {
   }))
 }
 
+export function createEmptyTemplate(t: (key: string) => string): HexCrawlerMap {
+  return {
+    version: 1,
+    title: t('defaults.untitledMap'),
+    hexes: makeHexes(),
+    encounters: ['', '', '', '', '', ''],
+    rumours: ['', '', '', '', '', ''],
+    factions: [
+      {
+        name: t('defaults.factionOne'),
+        resources: [''],
+        goals: [{ text: '', clockSlots: 4 }],
+      },
+      {
+        name: t('defaults.factionTwo'),
+        resources: [''],
+        goals: [{ text: '', clockSlots: 4 }],
+      },
+      {
+        name: t('defaults.factionThree'),
+        resources: [''],
+        goals: [{ text: '', clockSlots: 4 }],
+      },
+    ],
+  }
+}
+
+/** @deprecated Use createEmptyTemplate(t) for localized blank maps */
 export const EMPTY_TEMPLATE: HexCrawlerMap = {
   version: 1,
   title: 'Untitled Map',
@@ -16,20 +44,8 @@ export const EMPTY_TEMPLATE: HexCrawlerMap = {
   encounters: ['', '', '', '', '', ''],
   rumours: ['', '', '', '', '', ''],
   factions: [
-    {
-      name: 'Faction One',
-      resources: [''],
-      goals: [{ text: '', clockSlots: 4 }],
-    },
-    {
-      name: 'Faction Two',
-      resources: [''],
-      goals: [{ text: '', clockSlots: 4 }],
-    },
-    {
-      name: 'Faction Three',
-      resources: [''],
-      goals: [{ text: '', clockSlots: 4 }],
-    },
+    { name: 'Faction One', resources: [''], goals: [{ text: '', clockSlots: 4 }] },
+    { name: 'Faction Two', resources: [''], goals: [{ text: '', clockSlots: 4 }] },
+    { name: 'Faction Three', resources: [''], goals: [{ text: '', clockSlots: 4 }] },
   ],
 }

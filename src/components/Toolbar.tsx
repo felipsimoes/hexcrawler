@@ -1,9 +1,11 @@
 import { useRef } from 'react'
-import { EMPTY_TEMPLATE } from '../data/empty-template'
+import { createEmptyTemplate } from '../data/empty-template'
 import { OAKWOOD_TEMPLATE } from '../data/oakwood-template'
+import { useI18n, translateError } from '../i18n'
 import { exportMap, importMapFromFile, isHexcrawlFile } from '../lib/persistence'
 import { cloneMap } from '../lib/validation'
 import type { HexCrawlerMap } from '../types/map'
+import type { Locale } from '../i18n'
 
 interface ToolbarProps {
   title: string
@@ -15,6 +17,25 @@ interface ToolbarProps {
   map: HexCrawlerMap
 }
 
+function LanguageSwitcher() {
+  const { locale, setLocale, t } = useI18n()
+
+  return (
+    <label className="toolbar__language">
+      <span className="sr-only">{t('toolbar.language')}</span>
+      <select
+        className="toolbar__language-select"
+        value={locale}
+        onChange={(e) => setLocale(e.target.value as Locale)}
+        aria-label={t('toolbar.language')}
+      >
+        <option value="en">EN</option>
+        <option value="pt-BR">PT</option>
+      </select>
+    </label>
+  )
+}
+
 export function Toolbar({
   title,
   onTitleChange,
@@ -24,6 +45,7 @@ export function Toolbar({
   onError,
   map,
 }: ToolbarProps) {
+  const { t } = useI18n()
   const importRef = useRef<HTMLInputElement>(null)
 
   const handleImportFile = async (file: File | undefined) => {
@@ -32,12 +54,13 @@ export function Toolbar({
       const imported = await importMapFromFile(file)
       onImport(imported)
     } catch (err) {
-      onError(err instanceof Error ? err.message : 'Import failed.')
+      const message = err instanceof Error ? err.message : 'messages.importFailed'
+      onError(translateError(message, t))
     }
   }
 
-  const confirmAndNew = (template: HexCrawlerMap, label: string) => {
-    if (window.confirm(`Start a new map (${label})? Unsaved changes remain in your browser draft.`)) {
+  const confirmAndNew = (template: HexCrawlerMap, labelKey: 'confirm.blankLabel' | 'confirm.sampleLabel') => {
+    if (window.confirm(t('confirm.newMap', { label: t(labelKey) }))) {
       onNew(cloneMap(template))
     }
   }
@@ -45,38 +68,48 @@ export function Toolbar({
   return (
     <header className="toolbar no-print">
       <label className="toolbar__title field">
-        <span className="sr-only">Map title</span>
+        <span className="sr-only">{t('toolbar.mapTitle')}</span>
         <input
           type="text"
           className="toolbar__title-input"
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="Map title"
+          placeholder={t('toolbar.mapTitle')}
         />
       </label>
       <div className="toolbar__actions">
+        <LanguageSwitcher />
         <button type="button" className="btn-compact" onClick={() => importRef.current?.click()}>
-          Import
+          {t('toolbar.import')}
         </button>
         <button
           type="button"
           className="btn-compact"
           onClick={() => {
-            void exportMap(map).catch((err) =>
-              onError(err instanceof Error ? err.message : 'Export failed.'),
-            )
+            void exportMap(map).catch((err) => {
+              const message = err instanceof Error ? err.message : 'messages.exportFailed'
+              onError(translateError(message, t))
+            })
           }}
         >
-          Export
+          {t('toolbar.export')}
         </button>
-        <button type="button" className="btn-compact btn-secondary" onClick={() => confirmAndNew(EMPTY_TEMPLATE, 'blank')}>
-          Blank
+        <button
+          type="button"
+          className="btn-compact btn-secondary"
+          onClick={() => confirmAndNew(createEmptyTemplate(t), 'confirm.blankLabel')}
+        >
+          {t('toolbar.blank')}
         </button>
-        <button type="button" className="btn-compact btn-secondary" onClick={() => confirmAndNew(OAKWOOD_TEMPLATE, 'Oakwood sample')}>
-          Sample
+        <button
+          type="button"
+          className="btn-compact btn-secondary"
+          onClick={() => confirmAndNew(OAKWOOD_TEMPLATE, 'confirm.sampleLabel')}
+        >
+          {t('toolbar.sample')}
         </button>
         <button type="button" className="btn-compact btn-secondary" onClick={onPreview}>
-          Preview &amp; Print
+          {t('toolbar.previewPrint')}
         </button>
         <input
           ref={importRef}

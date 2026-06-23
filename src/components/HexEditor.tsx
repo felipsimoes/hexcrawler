@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useI18n, translateError } from '../i18n'
 import { resizeImageToDataUrl } from '../lib/images'
 import { resolveImageSrc } from '../lib/tiles'
 import type { HexCell } from '../types/map'
@@ -11,6 +12,7 @@ interface HexEditorProps {
 }
 
 export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
+  const { t } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const previewSrc = resolveImageSrc(hex.imageDataUrl)
 
@@ -20,19 +22,20 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
       const dataUrl = await resizeImageToDataUrl(file)
       onChange({ imageDataUrl: dataUrl })
     } catch (err) {
-      onError(err instanceof Error ? err.message : 'Image upload failed.')
+      const message = err instanceof Error ? err.message : 'messages.imageUploadFailed'
+      onError(translateError(message, t))
     }
   }
 
   return (
     <section className="hex-editor panel">
-      <h2>Hex {hex.id}</h2>
+      <h2>{t('hexEditor.title', { id: hex.id })}</h2>
       <div className="hex-editor__image-row">
         <div className="hex-editor__preview">
           {previewSrc ? (
-            <img src={previewSrc} alt={`Hex ${hex.id} artwork`} />
+            <img src={previewSrc} alt={t('hexEditor.title', { id: hex.id })} />
           ) : (
-            <div className="hex-editor__preview-empty">No image</div>
+            <div className="hex-editor__preview-empty">{t('hexEditor.noImage')}</div>
           )}
         </div>
         <div className="hex-editor__image-actions">
@@ -47,32 +50,32 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
             }}
           />
           <button type="button" onClick={() => fileRef.current?.click()}>
-            Upload custom image
+            {t('hexEditor.uploadCustom')}
           </button>
           {hex.imageDataUrl && (
             <button type="button" className="btn-secondary" onClick={() => onChange({ imageDataUrl: null })}>
-              Clear image
+              {t('hexEditor.clearImage')}
             </button>
           )}
         </div>
       </div>
       <TilePicker selectedValue={hex.imageDataUrl} onSelect={(imageDataUrl) => onChange({ imageDataUrl })} />
       <label className="field">
-        <span>Name</span>
+        <span>{t('hexEditor.name')}</span>
         <input
           type="text"
           value={hex.name}
           onChange={(e) => onChange({ name: e.target.value })}
-          placeholder="Location name"
+          placeholder={t('hexEditor.namePlaceholder')}
         />
       </label>
       <label className="field">
-        <span>Description</span>
+        <span>{t('hexEditor.description')}</span>
         <textarea
           rows={4}
           value={hex.description}
           onChange={(e) => onChange({ description: e.target.value })}
-          placeholder="Short location description for the print sheet"
+          placeholder={t('hexEditor.descriptionPlaceholder')}
         />
       </label>
     </section>

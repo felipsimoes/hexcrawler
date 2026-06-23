@@ -5,6 +5,7 @@ import { PrintLayout } from './components/PrintLayout'
 import { SectionEditors } from './components/SectionEditors'
 import { Toolbar } from './components/Toolbar'
 import { useMapState } from './hooks/useMapState'
+import { translateError, useI18n } from './i18n'
 import { isHexcrawlFile, importMapFromFile } from './lib/persistence'
 import type { AppMode } from './types/map'
 import './styles/global.css'
@@ -12,6 +13,7 @@ import './styles/editor.css'
 import './styles/print.css'
 
 function App() {
+  const { t } = useI18n()
   const [mode, setMode] = useState<AppMode>('edit')
   const {
     map,
@@ -43,12 +45,13 @@ function App() {
       try {
         const imported = await importMapFromFile(file)
         replaceMap(imported)
-        showMessage('Map imported successfully.')
+        showMessage(t('messages.importSuccess'))
       } catch (err) {
-        showMessage(err instanceof Error ? err.message : 'Import failed.')
+        const message = err instanceof Error ? err.message : 'messages.importFailed'
+        showMessage(translateError(message, t))
       }
     },
-    [replaceMap, showMessage],
+    [replaceMap, showMessage, t],
   )
 
   return (
@@ -111,10 +114,10 @@ function App() {
         <div className="print-mode">
           <div className="print-toolbar no-print">
             <button type="button" className="btn-secondary" onClick={() => setMode('edit')}>
-              Back to editor
+              {t('print.backToEditor')}
             </button>
             <button type="button" className="btn-primary" onClick={() => window.print()}>
-              Print / Save PDF
+              {t('print.printSavePdf')}
             </button>
           </div>
           <PrintLayout map={map} />

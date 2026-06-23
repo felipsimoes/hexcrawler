@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n'
 import type { HexCrawlerMap } from '../types/map'
 
 interface SectionEditorsProps {
@@ -35,10 +36,12 @@ export function SectionEditors({
   onAddFactionGoal,
   onRemoveFactionGoal,
 }: SectionEditorsProps) {
+  const { t } = useI18n()
+
   return (
     <div className="section-editors">
       <section className="panel">
-        <h2>All locations</h2>
+        <h2>{t('sections.allLocations')}</h2>
         <div className="location-list">
           {map.hexes.map((hex) => (
             <div
@@ -53,13 +56,13 @@ export function SectionEditors({
                   type="text"
                   value={hex.name}
                   onChange={(e) => onUpdateHex(hex.id, { name: e.target.value })}
-                  placeholder={`Location ${hex.id} name`}
+                  placeholder={t('sections.locationNamePlaceholder', { id: hex.id })}
                 />
                 <textarea
                   rows={2}
                   value={hex.description}
                   onChange={(e) => onUpdateHex(hex.id, { description: e.target.value })}
-                  placeholder="Description"
+                  placeholder={t('sections.descriptionPlaceholder')}
                 />
               </div>
             </div>
@@ -68,8 +71,8 @@ export function SectionEditors({
       </section>
 
       <section className="panel">
-        <h2>Encounters</h2>
-        <p className="panel-subtitle">d6 encounter table</p>
+        <h2>{t('sections.encounters')}</h2>
+        <p className="panel-subtitle">{t('sections.encountersSubtitle')}</p>
         {map.encounters.map((encounter, index) => (
           <label key={index} className="field field--inline">
             <span>{index + 1}.</span>
@@ -77,15 +80,15 @@ export function SectionEditors({
               type="text"
               value={encounter}
               onChange={(e) => onSetEncounter(index, e.target.value)}
-              placeholder={`Encounter ${index + 1}`}
+              placeholder={t('sections.encounterPlaceholder', { n: index + 1 })}
             />
           </label>
         ))}
       </section>
 
       <section className="panel">
-        <h2>Rumours</h2>
-        <p className="panel-subtitle">d6 rumour table</p>
+        <h2>{t('sections.rumours')}</h2>
+        <p className="panel-subtitle">{t('sections.rumoursSubtitle')}</p>
         {map.rumours.map((rumour, index) => (
           <label key={index} className="field field--inline">
             <span>{index + 1}.</span>
@@ -93,19 +96,19 @@ export function SectionEditors({
               type="text"
               value={rumour}
               onChange={(e) => onSetRumour(index, e.target.value)}
-              placeholder={`Rumour ${index + 1}`}
+              placeholder={t('sections.rumourPlaceholder', { n: index + 1 })}
             />
           </label>
         ))}
       </section>
 
       <section className="panel">
-        <h2>Factions</h2>
+        <h2>{t('sections.factions')}</h2>
         <div className="faction-editors">
           {map.factions.map((faction, fi) => (
             <div key={fi} className="faction-editor">
               <label className="field">
-                <span>Faction name</span>
+                <span>{t('sections.factionName')}</span>
                 <input
                   type="text"
                   value={faction.name}
@@ -115,9 +118,9 @@ export function SectionEditors({
 
               <div className="faction-editor__subsection">
                 <div className="subsection-header">
-                  <h3>Resources</h3>
+                  <h3>{t('sections.resources')}</h3>
                   <button type="button" className="btn-small" onClick={() => onAddFactionResource(fi)}>
-                    + Add
+                    {t('sections.add')}
                   </button>
                 </div>
                 {faction.resources.map((resource, ri) => (
@@ -126,13 +129,13 @@ export function SectionEditors({
                       type="text"
                       value={resource}
                       onChange={(e) => onSetFactionResource(fi, ri, e.target.value)}
-                      placeholder="Resource"
+                      placeholder={t('sections.resourcePlaceholder')}
                     />
                     <button
                       type="button"
                       className="btn-small btn-secondary"
                       onClick={() => onRemoveFactionResource(fi, ri)}
-                      aria-label="Remove resource"
+                      aria-label={t('sections.removeResource')}
                     >
                       ×
                     </button>
@@ -142,16 +145,16 @@ export function SectionEditors({
 
               <div className="faction-editor__subsection">
                 <div className="subsection-header">
-                  <h3>Goals</h3>
+                  <h3>{t('sections.goals')}</h3>
                   <button type="button" className="btn-small" onClick={() => onAddFactionGoal(fi)}>
-                    + Add
+                    {t('sections.add')}
                   </button>
                 </div>
                 {faction.goals.map((goal, gi) => (
                   <div key={gi} className="goal-row">
                     <div className="goal-row__clocks">
                       <label>
-                        Clock
+                        {t('sections.clock')}
                         <select
                           value={goal.clockSlots}
                           onChange={(e) =>
@@ -174,13 +177,13 @@ export function SectionEditors({
                         type="text"
                         value={goal.text}
                         onChange={(e) => onSetFactionGoal(fi, gi, { text: e.target.value })}
-                        placeholder="Goal"
+                        placeholder={t('sections.goalPlaceholder')}
                       />
                       <button
                         type="button"
                         className="btn-small btn-secondary"
                         onClick={() => onRemoveFactionGoal(fi, gi)}
-                        aria-label="Remove goal"
+                        aria-label={t('sections.removeGoal')}
                       >
                         ×
                       </button>

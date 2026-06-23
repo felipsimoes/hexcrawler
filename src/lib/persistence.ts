@@ -73,10 +73,10 @@ export function importMapFromFile(file: File): Promise<HexCrawlerMap> {
         const data = JSON.parse(reader.result as string)
         resolve(validateMap(data))
       } catch (err) {
-        reject(err instanceof Error ? err : new Error('Could not parse map file.'))
+        reject(err instanceof Error ? err : new Error('errors.parseFailed'))
       }
     }
-    reader.onerror = () => reject(new Error('Could not read file.'))
+    reader.onerror = () => reject(new Error('errors.readFileFailed'))
     reader.readAsText(file)
   })
 }

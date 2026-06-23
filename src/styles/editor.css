@@ -32,6 +32,18 @@
   font-size: 0.85rem;
 }
 
+.toolbar__language {
+  margin: 0;
+}
+
+.toolbar__language-select {
+  border: 1px solid #111;
+  background: #fff;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
 .toolbar__title-input {
   font-family: 'UnifrakturMaguntia', serif;
   font-size: 1.6rem;

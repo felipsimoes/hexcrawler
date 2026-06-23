@@ -1,5 +1,5 @@
-import type { Faction, HexCrawlerMap, HexCell } from '../types/map'
 import { EMPTY_TEMPLATE } from '../data/empty-template'
+import type { Faction, HexCrawlerMap, HexCell } from '../types/map'
 import { isTileReference } from './tiles'
 
 function isStringArray(value: unknown, length: number): value is string[] {
@@ -43,39 +43,39 @@ function isFaction(value: unknown): value is Faction {
 
 export function validateMap(data: unknown): HexCrawlerMap {
   if (!data || typeof data !== 'object') {
-    throw new Error('Invalid file: expected a JSON object.')
+    throw new Error('errors.invalidJson')
   }
 
   const map = data as HexCrawlerMap
 
   if (map.version !== 1) {
-    throw new Error('Unsupported map version. Expected version 1.')
+    throw new Error('errors.unsupportedVersion')
   }
 
   if (typeof map.title !== 'string') {
-    throw new Error('Invalid map: title must be a string.')
+    throw new Error('errors.invalidTitle')
   }
 
   if (!Array.isArray(map.hexes) || map.hexes.length !== 19 || !map.hexes.every(isHexCell)) {
-    throw new Error('Invalid map: expected exactly 19 hex entries.')
+    throw new Error('errors.invalidHexCount')
   }
 
   const ids = map.hexes.map((h) => h.id).sort((a, b) => a - b)
   const expectedIds = Array.from({ length: 19 }, (_, i) => i + 1)
   if (ids.some((id, i) => id !== expectedIds[i])) {
-    throw new Error('Invalid map: hex ids must be 1 through 19.')
+    throw new Error('errors.invalidHexIds')
   }
 
   if (!isStringArray(map.encounters, 6)) {
-    throw new Error('Invalid map: expected 6 encounter entries.')
+    throw new Error('errors.invalidEncounters')
   }
 
   if (!isStringArray(map.rumours, 6)) {
-    throw new Error('Invalid map: expected 6 rumour entries.')
+    throw new Error('errors.invalidRumours')
   }
 
   if (!Array.isArray(map.factions) || map.factions.length !== 3 || !map.factions.every(isFaction)) {
-    throw new Error('Invalid map: expected 3 factions.')
+    throw new Error('errors.invalidFactions')
   }
 
   return structuredClone(map)

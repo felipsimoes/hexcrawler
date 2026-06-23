@@ -1,3 +1,4 @@
+import { useI18n } from '../i18n'
 import { HexGrid } from './HexGrid'
 import type { HexCrawlerMap } from '../types/map'
 
@@ -16,13 +17,15 @@ function ClockDots({ count }: { count: number }) {
 }
 
 export function PrintLayout({ map }: PrintLayoutProps) {
+  const { t } = useI18n()
+
   return (
     <div className="print-layout">
       <div className="print-main">
         <div className="print-map-column">
           <header className="print-header">
             <div className="print-title-frame">
-              <h1 className="print-title">{map.title || 'Untitled Map'}</h1>
+              <h1 className="print-title">{map.title || t('print.untitledMap')}</h1>
             </div>
           </header>
           <div className="print-map">
@@ -33,7 +36,7 @@ export function PrintLayout({ map }: PrintLayoutProps) {
           {map.hexes.map((hex) => (
             <p key={hex.id} className="print-hex-entry">
               <strong>
-                {hex.id}. {hex.name || `Location ${hex.id}`}
+                {hex.id}. {hex.name || t('print.locationFallback', { id: hex.id })}
               </strong>{' '}
               {hex.description}
             </p>
@@ -43,33 +46,33 @@ export function PrintLayout({ map }: PrintLayoutProps) {
 
       <div className="print-bottom">
         <section className="print-encounters">
-          <h2>Encounters</h2>
-          <p className="print-subtitle">d6 encounter</p>
+          <h2>{t('print.encounters')}</h2>
+          <p className="print-subtitle">{t('print.encounterTable')}</p>
           <ol>
             {map.encounters.map((entry, i) => (
-              <li key={i}>{entry || `Encounter ${i + 1}`}</li>
+              <li key={i}>{entry || t('print.encounterFallback', { n: i + 1 })}</li>
             ))}
           </ol>
         </section>
 
         <section className="print-rumours">
-          <h2>Rumours</h2>
-          <p className="print-subtitle">d6 rumour</p>
+          <h2>{t('print.rumours')}</h2>
+          <p className="print-subtitle">{t('print.rumourTable')}</p>
           <ol>
             {map.rumours.map((entry, i) => (
-              <li key={i}>{entry || `Rumour ${i + 1}`}</li>
+              <li key={i}>{entry || t('print.rumourFallback', { n: i + 1 })}</li>
             ))}
           </ol>
         </section>
 
         <section className="print-factions">
-          <h2 className="print-factions__heading">Factions</h2>
+          <h2 className="print-factions__heading">{t('print.factions')}</h2>
           <div className="print-factions__grid">
             {map.factions.map((faction, i) => (
               <div key={i} className="print-faction">
-                <h3>{faction.name || `Faction ${i + 1}`}</h3>
+                <h3>{faction.name || t('print.factionFallback', { n: i + 1 })}</h3>
                 <div className="print-faction__block">
-                  <h4>Resources</h4>
+                  <h4>{t('print.resources')}</h4>
                   <ul>
                     {faction.resources.filter(Boolean).map((resource, ri) => (
                       <li key={ri}>{resource}</li>
@@ -77,7 +80,7 @@ export function PrintLayout({ map }: PrintLayoutProps) {
                   </ul>
                 </div>
                 <div className="print-faction__block">
-                  <h4>Goals</h4>
+                  <h4>{t('print.goals')}</h4>
                   <ul className="print-goals">
                     {faction.goals.map((goal, gi) => (
                       <li key={gi}>

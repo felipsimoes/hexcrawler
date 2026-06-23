@@ -8,6 +8,7 @@ import {
   hexPolygonPoints,
 } from '../data/hex-layout'
 import { resolveImageSrc } from '../lib/tiles'
+import { useI18n } from '../i18n'
 import type { HexCell } from '../types/map'
 
 interface HexGridProps {
@@ -27,6 +28,7 @@ export function HexGrid({
   onSelectHex,
   className,
 }: HexGridProps) {
+  const { t } = useI18n()
   const hexMap = new Map(hexes.map((h) => [h.id, h]))
   const bounds = getGridBounds(size)
   const padding = 8
@@ -43,7 +45,7 @@ export function HexGrid({
       className={className}
       viewBox={`0 0 ${viewWidth} ${viewHeight}`}
       role={interactive ? 'listbox' : 'img'}
-      aria-label="Hex map"
+      aria-label={t('hexGrid.ariaLabel')}
     >
       <defs>
         {HEX_POSITIONS.map((pos) => {

@@ -20,13 +20,13 @@ export function urlToDataUrl(url: string): Promise<string> {
       canvas.height = height
       const ctx = canvas.getContext('2d')
       if (!ctx) {
-        reject(new Error('Could not process image.'))
+        reject(new Error('errors.processImageFailed'))
         return
       }
       ctx.drawImage(img, 0, 0, width, height)
       resolve(canvas.toDataURL('image/png', 0.85))
     }
-    img.onerror = () => reject(new Error('Could not load image.'))
+    img.onerror = () => reject(new Error('errors.loadImageFailed'))
     img.src = url
   })
 }
@@ -34,7 +34,7 @@ export function urlToDataUrl(url: string): Promise<string> {
 export function resizeImageToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!isAcceptedImageType(file.type)) {
-      reject(new Error('Please upload a PNG, JPEG, or WebP image.'))
+      reject(new Error('errors.invalidImageType'))
       return
     }
 
@@ -52,7 +52,7 @@ export function resizeImageToDataUrl(file: File): Promise<string> {
         canvas.height = height
         const ctx = canvas.getContext('2d')
         if (!ctx) {
-          reject(new Error('Could not process image.'))
+          reject(new Error('errors.processImageFailed'))
           return
         }
         ctx.drawImage(img, 0, 0, width, height)
@@ -60,10 +60,10 @@ export function resizeImageToDataUrl(file: File): Promise<string> {
         const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg'
         resolve(canvas.toDataURL(mime, 0.85))
       }
-      img.onerror = () => reject(new Error('Could not load image.'))
+      img.onerror = () => reject(new Error('errors.loadImageFailed'))
       img.src = reader.result as string
     }
-    reader.onerror = () => reject(new Error('Could not read file.'))
+    reader.onerror = () => reject(new Error('errors.readFileFailed'))
     reader.readAsDataURL(file)
   })
 }
