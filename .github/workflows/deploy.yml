@@ -26,8 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Uncomment and set if deploying to https://<user>.github.io/hexcrawler/
-          # VITE_BASE: /hexcrawler/
+          VITE_BASE: /hexcrawler/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
