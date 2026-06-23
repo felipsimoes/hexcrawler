@@ -44,12 +44,23 @@ export function Toolbar({
 
   return (
     <header className="toolbar no-print">
+      <label className="toolbar__title field">
+        <span className="sr-only">Map title</span>
+        <input
+          type="text"
+          className="toolbar__title-input"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          placeholder="Map title"
+        />
+      </label>
       <div className="toolbar__actions">
-        <button type="button" onClick={() => importRef.current?.click()}>
+        <button type="button" className="btn-compact" onClick={() => importRef.current?.click()}>
           Import
         </button>
         <button
           type="button"
+          className="btn-compact"
           onClick={() => {
             void exportMap(map).catch((err) =>
               onError(err instanceof Error ? err.message : 'Export failed.'),
@@ -58,13 +69,13 @@ export function Toolbar({
         >
           Export
         </button>
-        <button type="button" className="btn-secondary" onClick={() => confirmAndNew(EMPTY_TEMPLATE, 'blank')}>
-          New blank
+        <button type="button" className="btn-compact btn-secondary" onClick={() => confirmAndNew(EMPTY_TEMPLATE, 'blank')}>
+          Blank
         </button>
-        <button type="button" className="btn-secondary" onClick={() => confirmAndNew(OAKWOOD_TEMPLATE, 'Oakwood sample')}>
-          Load sample
+        <button type="button" className="btn-compact btn-secondary" onClick={() => confirmAndNew(OAKWOOD_TEMPLATE, 'Oakwood sample')}>
+          Sample
         </button>
-        <button type="button" className="btn-primary" onClick={onPreview}>
+        <button type="button" className="btn-compact btn-secondary" onClick={onPreview}>
           Preview &amp; Print
         </button>
         <input
@@ -78,16 +89,6 @@ export function Toolbar({
           }}
         />
       </div>
-      <label className="toolbar__title field">
-        <span className="sr-only">Map title</span>
-        <input
-          type="text"
-          className="toolbar__title-input"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="Map title"
-        />
-      </label>
     </header>
   )
 }

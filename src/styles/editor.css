@@ -12,17 +12,24 @@
   z-index: 10;
 }
 
-.toolbar__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
 .toolbar__title {
   margin: 0;
   min-width: 12rem;
   flex: 1;
   max-width: 20rem;
+}
+
+.toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.btn-compact {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.85rem;
 }
 
 .toolbar__title-input {
