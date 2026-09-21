@@ -15,6 +15,7 @@ export const en = {
     newMap: 'Start a new map ({{label}})? Unsaved changes remain in your browser draft.',
     blankLabel: 'blank',
     sampleLabel: 'Oakwood sample',
+    removeSubMap: 'Remove this nested hex map and all of its content?',
   },
   messages: {
     importSuccess: 'Map imported successfully.',
@@ -46,6 +47,15 @@ export const en = {
     namePlaceholder: 'Location name',
     description: 'Description',
     descriptionPlaceholder: 'Short location description for the print sheet',
+  },
+  nested: {
+    breadcrumb: 'Map navigation',
+    sectionTitle: 'Detail map',
+    sectionHint: 'Expand this hex into its own 19-hex page. Nested pages print together.',
+    expandMap: 'Expand into hex map',
+    openMap: 'Open hex map',
+    removeMap: 'Remove hex map',
+    subMapTitle: 'Hex {{id}}',
   },
   tilePicker: {
     choose: 'Choose a tile',
@@ -94,6 +104,7 @@ export const en = {
     goals: 'Goals',
     encounterFallback: 'Encounter {{n}}',
     rumourFallback: 'Rumour {{n}}',
+    hasSubMap: '▸',
   },
   hexGrid: {
     ariaLabel: 'Hex map',

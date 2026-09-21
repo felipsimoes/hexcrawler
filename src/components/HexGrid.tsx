@@ -117,6 +117,14 @@ export function HexGrid({
               </g>
             )}
             <polygon className="hex-cell__border" points={points} />
+            {hex?.subMap && (
+              <circle
+                className="hex-cell__expand-mark"
+                cx={cx}
+                cy={cy + drawSize * 0.55}
+                r={4}
+              />
+            )}
             <g className="hex-cell__badge">
               <circle cx={badge.x} cy={badge.y} r={HEX_BADGE_RADIUS} />
               <text x={badge.x} y={badge.y + 4} textAnchor="middle">

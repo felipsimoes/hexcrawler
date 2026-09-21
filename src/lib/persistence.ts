@@ -39,15 +39,24 @@ export function sanitizeFilename(title: string): string {
 export async function embedTileReferences(map: HexCrawlerMap): Promise<HexCrawlerMap> {
   const hexes = await Promise.all(
     map.hexes.map(async (hex) => {
-      if (!hex.imageDataUrl || !isTileReference(hex.imageDataUrl)) return hex
-      const url = resolveImageSrc(hex.imageDataUrl)
-      if (!url) return { ...hex, imageDataUrl: null }
-      try {
-        const dataUrl = await urlToDataUrl(url)
-        return { ...hex, imageDataUrl: dataUrl }
-      } catch {
-        return hex
+      let next = hex
+      if (hex.imageDataUrl && isTileReference(hex.imageDataUrl)) {
+        const url = resolveImageSrc(hex.imageDataUrl)
+        if (!url) {
+          next = { ...hex, imageDataUrl: null }
+        } else {
+          try {
+            const dataUrl = await urlToDataUrl(url)
+            next = { ...hex, imageDataUrl: dataUrl }
+          } catch {
+            next = hex
+          }
+        }
       }
+      if (next.subMap) {
+        next = { ...next, subMap: await embedTileReferences(next.subMap) }
+      }
+      return next
     }),
   )
   return { ...map, hexes }

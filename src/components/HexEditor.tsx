@@ -9,12 +9,23 @@ interface HexEditorProps {
   hex: HexCell
   onChange: (patch: Partial<HexCell>) => void
   onError: (message: string) => void
+  onExpand: () => void
+  onOpenSubMap: () => void
+  onRemoveSubMap: () => void
 }
 
-export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
+export function HexEditor({
+  hex,
+  onChange,
+  onError,
+  onExpand,
+  onOpenSubMap,
+  onRemoveSubMap,
+}: HexEditorProps) {
   const { t } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const previewSrc = resolveImageSrc(hex.imageDataUrl)
+  const hasSubMap = Boolean(hex.subMap)
 
   const handleImageUpload = async (file: File | undefined) => {
     if (!file) return
@@ -24,6 +35,12 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'messages.imageUploadFailed'
       onError(translateError(message, t))
+    }
+  }
+
+  const handleRemoveSubMap = () => {
+    if (window.confirm(t('confirm.removeSubMap'))) {
+      onRemoveSubMap()
     }
   }
 
@@ -78,6 +95,25 @@ export function HexEditor({ hex, onChange, onError }: HexEditorProps) {
           placeholder={t('hexEditor.descriptionPlaceholder')}
         />
       </label>
+
+      <div className="hex-editor__nested">
+        <h3>{t('nested.sectionTitle')}</h3>
+        <p className="panel-subtitle">{t('nested.sectionHint')}</p>
+        {hasSubMap ? (
+          <div className="hex-editor__nested-actions">
+            <button type="button" className="btn-primary" onClick={onOpenSubMap}>
+              {t('nested.openMap')}
+            </button>
+            <button type="button" className="btn-secondary" onClick={handleRemoveSubMap}>
+              {t('nested.removeMap')}
+            </button>
+          </div>
+        ) : (
+          <button type="button" onClick={onExpand}>
+            {t('nested.expandMap')}
+          </button>
+        )}
+      </div>
     </section>
   )
 }

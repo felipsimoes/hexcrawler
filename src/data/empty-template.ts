@@ -9,7 +9,9 @@ function makeHexes() {
   }))
 }
 
-export function createEmptyTemplate(t: (key: string) => string): HexCrawlerMap {
+export function createEmptyTemplate(
+  t: (key: string, params?: Record<string, string | number>) => string,
+): HexCrawlerMap {
   return {
     version: 1,
     title: t('defaults.untitledMap'),

@@ -6,10 +6,12 @@ A browser-based editor for creating one-page hexcrawl RPG maps. No login require
 
 - Fixed 19-hex map layout matching classic hexcrawl zines
 - Upload artwork per hex with name and description
+- Expand any hex into its own nested 19-hex detail map (breadcrumbs to navigate)
 - Editable encounters (d6), rumours (d6), and three factions with goal clocks
 - Export / import portable JSON files (images embedded as base64)
 - Auto-saves draft to browser localStorage
-- Print-optimized one-page layout (Letter size) — use **Print / Save PDF** in preview mode
+- Print-optimized layout — root map plus all nested maps as one multi-page PDF
+- English / Portuguese (Brazil) UI
 
 ## Development
 

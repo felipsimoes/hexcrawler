@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { Breadcrumb } from './components/Breadcrumb'
 import { HexEditor } from './components/HexEditor'
 import { HexGrid } from './components/HexGrid'
 import { PrintLayout } from './components/PrintLayout'
@@ -16,14 +17,20 @@ function App() {
   const { t } = useI18n()
   const [mode, setMode] = useState<AppMode>('edit')
   const {
+    rootMap,
     map,
+    breadcrumbs,
     selectedHexId,
     setSelectedHexId,
     message,
     showMessage,
     replaceMap,
+    navigateTo,
     setTitle,
     updateHex,
+    expandSelectedHex,
+    openSubMap,
+    removeSelectedSubMap,
     setEncounter,
     setRumour,
     updateFaction,
@@ -75,8 +82,9 @@ function App() {
             onNew={replaceMap}
             onPreview={() => setMode('print')}
             onError={showMessage}
-            map={map}
+            map={rootMap}
           />
+          <Breadcrumb segments={breadcrumbs} onNavigate={navigateTo} />
           <main className="editor-layout no-print">
             <aside className="editor-layout__map">
               <HexGrid
@@ -91,6 +99,9 @@ function App() {
                 hex={selectedHex}
                 onChange={(patch) => updateHex(selectedHex.id, patch)}
                 onError={showMessage}
+                onExpand={() => expandSelectedHex(t)}
+                onOpenSubMap={() => openSubMap(selectedHex.id)}
+                onRemoveSubMap={removeSelectedSubMap}
               />
               <SectionEditors
                 map={map}
@@ -120,7 +131,7 @@ function App() {
               {t('print.printSavePdf')}
             </button>
           </div>
-          <PrintLayout map={map} />
+          <PrintLayout rootMap={rootMap} />
         </div>
       )}
     </div>

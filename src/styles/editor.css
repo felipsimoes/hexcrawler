@@ -129,6 +129,62 @@
   pointer-events: none;
 }
 
+.hex-cell__expand-mark {
+  fill: #111;
+  stroke: #fff;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: #faf7f0;
+  border-bottom: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.breadcrumb__sep {
+  margin: 0 0.15rem;
+  color: #666;
+}
+
+.breadcrumb__link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #111;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.breadcrumb__current {
+  font-weight: 700;
+}
+
+.hex-editor__nested {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #ddd;
+}
+
+.hex-editor__nested h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hex-editor__nested-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .hex-editor__image-row {
   display: flex;
   gap: 1rem;

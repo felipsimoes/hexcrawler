@@ -1,9 +1,10 @@
 import { useI18n } from '../i18n'
+import { collectPrintPages } from '../lib/map-tree'
 import { HexGrid } from './HexGrid'
-import type { HexCrawlerMap } from '../types/map'
+import type { HexCrawlerMap, PrintPage } from '../types/map'
 
 interface PrintLayoutProps {
-  map: HexCrawlerMap
+  rootMap: HexCrawlerMap
 }
 
 function ClockDots({ count }: { count: number }) {
@@ -16,11 +17,15 @@ function ClockDots({ count }: { count: number }) {
   )
 }
 
-export function PrintLayout({ map }: PrintLayoutProps) {
+function PrintPageView({ page, showTrail }: { page: PrintPage; showTrail: boolean }) {
   const { t } = useI18n()
+  const { map } = page
 
   return (
     <div className="print-layout">
+      {showTrail && page.path.length > 0 && (
+        <p className="print-trail">{page.label}</p>
+      )}
       <div className="print-main">
         <div className="print-map-column">
           <header className="print-header">
@@ -37,6 +42,7 @@ export function PrintLayout({ map }: PrintLayoutProps) {
             <p key={hex.id} className="print-hex-entry">
               <strong>
                 {hex.id}. {hex.name || t('print.locationFallback', { id: hex.id })}
+                {hex.subMap ? ` ${t('print.hasSubMap')}` : ''}
               </strong>{' '}
               {hex.description}
             </p>
@@ -95,6 +101,22 @@ export function PrintLayout({ map }: PrintLayoutProps) {
           </div>
         </section>
       </div>
+    </div>
+  )
+}
+
+export function PrintLayout({ rootMap }: PrintLayoutProps) {
+  const pages = collectPrintPages(rootMap)
+  const multiPage = pages.length > 1
+
+  return (
+    <div className="print-document">
+      {pages.map((page, index) => (
+        <div key={page.path.join('-') || 'root'} className="print-page-wrap">
+          {index > 0 && <div className="print-page-break" />}
+          <PrintPageView page={page} showTrail={multiPage} />
+        </div>
+      ))}
     </div>
   )
 }

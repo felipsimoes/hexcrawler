@@ -14,6 +14,8 @@ export interface HexCell {
   name: string
   description: string
   imageDataUrl: string | null
+  /** Optional nested hexcrawl map for this hex. */
+  subMap?: HexCrawlerMap
 }
 
 export interface HexCrawlerMap {
@@ -26,3 +28,13 @@ export interface HexCrawlerMap {
 }
 
 export type AppMode = 'edit' | 'print'
+
+/** Path of hex ids from root into nested sub-maps (empty = root map). */
+export type MapPath = number[]
+
+export interface PrintPage {
+  map: HexCrawlerMap
+  path: MapPath
+  /** Human-readable trail, e.g. "Oakwood › Appleburgh" */
+  label: string
+}

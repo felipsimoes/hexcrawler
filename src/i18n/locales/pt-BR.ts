@@ -16,6 +16,7 @@ export const ptBR = {
       'Iniciar um novo mapa ({{label}})? As alterações não salvas permanecem no rascunho do navegador.',
     blankLabel: 'em branco',
     sampleLabel: 'exemplo Oakwood',
+    removeSubMap: 'Remover este mapa hexagonal aninhado e todo o seu conteúdo?',
   },
   messages: {
     importSuccess: 'Mapa importado com sucesso.',
@@ -47,6 +48,15 @@ export const ptBR = {
     namePlaceholder: 'Nome do local',
     description: 'Descrição',
     descriptionPlaceholder: 'Descrição curta do local para a folha impressa',
+  },
+  nested: {
+    breadcrumb: 'Navegação do mapa',
+    sectionTitle: 'Mapa detalhado',
+    sectionHint: 'Expanda este hex em uma página própria com 19 hexes. Páginas aninhadas imprimem juntas.',
+    expandMap: 'Expandir em mapa hexagonal',
+    openMap: 'Abrir mapa',
+    removeMap: 'Remover mapa',
+    subMapTitle: 'Hex {{id}}',
   },
   tilePicker: {
     choose: 'Escolha um tile',
@@ -95,6 +105,7 @@ export const ptBR = {
     goals: 'Objetivos',
     encounterFallback: 'Encontro {{n}}',
     rumourFallback: 'Rumor {{n}}',
+    hasSubMap: '▸',
   },
   hexGrid: {
     ariaLabel: 'Mapa hexagonal',

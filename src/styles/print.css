@@ -166,6 +166,28 @@
   display: inline-block;
 }
 
+.print-document {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.print-page-wrap {
+  display: block;
+}
+
+.print-trail {
+  margin: 0 0 0.1in;
+  font-size: 8pt;
+  font-style: italic;
+  text-align: center;
+  color: #333;
+}
+
+.print-page-break {
+  display: none;
+}
+
 @media print {
   @page {
     size: letter;
@@ -184,6 +206,10 @@
     padding: 0;
   }
 
+  .print-document {
+    gap: 0;
+  }
+
   .print-layout {
     width: auto;
     min-height: auto;
@@ -191,6 +217,13 @@
     padding: 0;
     border: none;
     box-shadow: none;
+  }
+
+  .print-page-break {
+    display: block;
+    break-before: page;
+    page-break-before: always;
+    height: 0;
   }
 
   .print-main,
