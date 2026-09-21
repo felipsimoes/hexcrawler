@@ -34,7 +34,7 @@ function PrintPageView({ page, showTrail }: { page: PrintPage; showTrail: boolea
             </div>
           </header>
           <div className="print-map">
-            <HexGrid hexes={map.hexes} size={44} />
+            <HexGrid hexes={map.hexes} size={44} showLabels={false} />
           </div>
         </div>
         <div className="print-descriptions">

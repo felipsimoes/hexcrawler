@@ -86,39 +86,57 @@ function App() {
           />
           <Breadcrumb segments={breadcrumbs} onNavigate={navigateTo} />
           <main className="editor-layout no-print">
-            <aside className="editor-layout__map">
-              <HexGrid
-                hexes={map.hexes}
-                selectedHexId={selectedHexId}
-                interactive
-                onSelectHex={setSelectedHexId}
-              />
-            </aside>
-            <div className="editor-layout__sidebar">
+            <div className="editor-workspace">
+              <aside className="editor-layout__map">
+                <HexGrid
+                  hexes={map.hexes}
+                  selectedHexId={selectedHexId}
+                  interactive
+                  onSelectHex={setSelectedHexId}
+                  onOpenHex={openSubMap}
+                />
+                <div className="hex-jump" role="listbox" aria-label={t('hexEditor.jump')}>
+                  {map.hexes.map((hex) => (
+                    <button
+                      key={hex.id}
+                      type="button"
+                      role="option"
+                      aria-selected={hex.id === selectedHexId}
+                      title={hex.name || t('print.locationFallback', { id: hex.id })}
+                      className={`hex-jump__item${hex.id === selectedHexId ? ' hex-jump__item--active' : ''}${hex.name ? ' hex-jump__item--named' : ''}${hex.subMap ? ' hex-jump__item--nested' : ''}`}
+                      onClick={() => setSelectedHexId(hex.id)}
+                      onDoubleClick={() => {
+                        if (hex.subMap) openSubMap(hex.id)
+                      }}
+                    >
+                      {hex.id}
+                    </button>
+                  ))}
+                </div>
+              </aside>
               <HexEditor
                 hex={selectedHex}
+                hexCount={map.hexes.length}
                 onChange={(patch) => updateHex(selectedHex.id, patch)}
                 onError={showMessage}
+                onSelectHex={setSelectedHexId}
                 onExpand={() => expandSelectedHex(t)}
                 onOpenSubMap={() => openSubMap(selectedHex.id)}
                 onRemoveSubMap={removeSelectedSubMap}
               />
-              <SectionEditors
-                map={map}
-                selectedHexId={selectedHexId}
-                onSelectHex={setSelectedHexId}
-                onUpdateHex={updateHex}
-                onSetEncounter={setEncounter}
-                onSetRumour={setRumour}
-                onUpdateFaction={updateFaction}
-                onSetFactionResource={setFactionResource}
-                onAddFactionResource={addFactionResource}
-                onRemoveFactionResource={removeFactionResource}
-                onSetFactionGoal={setFactionGoal}
-                onAddFactionGoal={addFactionGoal}
-                onRemoveFactionGoal={removeFactionGoal}
-              />
             </div>
+            <SectionEditors
+              map={map}
+              onSetEncounter={setEncounter}
+              onSetRumour={setRumour}
+              onUpdateFaction={updateFaction}
+              onSetFactionResource={setFactionResource}
+              onAddFactionResource={addFactionResource}
+              onRemoveFactionResource={removeFactionResource}
+              onSetFactionGoal={setFactionGoal}
+              onAddFactionGoal={addFactionGoal}
+              onRemoveFactionGoal={removeFactionGoal}
+            />
           </main>
         </>
       ) : (

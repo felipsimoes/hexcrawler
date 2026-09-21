@@ -47,6 +47,11 @@ export const en = {
     namePlaceholder: 'Location name',
     description: 'Description',
     descriptionPlaceholder: 'Short location description for the print sheet',
+    prev: 'Previous',
+    next: 'Next',
+    jump: 'Hexes',
+    chooseTile: 'Choose tile',
+    hideTiles: 'Hide tiles',
   },
   nested: {
     breadcrumb: 'Map navigation',

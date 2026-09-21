@@ -48,6 +48,11 @@ export const ptBR = {
     namePlaceholder: 'Nome do local',
     description: 'Descrição',
     descriptionPlaceholder: 'Descrição curta do local para a folha impressa',
+    prev: 'Anterior',
+    next: 'Próximo',
+    jump: 'Hexes',
+    chooseTile: 'Escolher tile',
+    hideTiles: 'Ocultar tiles',
   },
   nested: {
     breadcrumb: 'Navegação do mapa',

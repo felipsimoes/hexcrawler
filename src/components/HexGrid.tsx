@@ -18,6 +18,8 @@ interface HexGridProps {
   interactive?: boolean
   size?: number
   onSelectHex?: (id: number) => void
+  onOpenHex?: (id: number) => void
+  showLabels?: boolean
   className?: string
 }
 
@@ -27,6 +29,8 @@ export function HexGrid({
   interactive = false,
   size = HEX_SIZE,
   onSelectHex,
+  onOpenHex,
+  showLabels = true,
   className,
 }: HexGridProps) {
   const { t } = useI18n()
@@ -43,8 +47,11 @@ export function HexGrid({
 
   return (
     <svg
-      className={className}
+      className={className ? `hex-grid ${className}` : 'hex-grid'}
       viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+      width={viewWidth}
+      height={viewHeight}
+      preserveAspectRatio="xMidYMid meet"
       role={interactive ? 'listbox' : 'img'}
       aria-label={t('hexGrid.ariaLabel')}
     >
@@ -77,6 +84,9 @@ export function HexGrid({
             key={pos.id}
             className={`hex-cell${isSelected ? ' hex-cell--selected' : ''}${interactive ? ' hex-cell--interactive' : ''}`}
             onClick={interactive ? () => onSelectHex?.(pos.id) : undefined}
+            onDoubleClick={
+              interactive && hex?.subMap ? () => onOpenHex?.(pos.id) : undefined
+            }
             onKeyDown={
               interactive
                 ? (e) => {
@@ -115,6 +125,16 @@ export function HexGrid({
                   ✎
                 </text>
               </g>
+            )}
+            {showLabels && hex?.name && (
+              <foreignObject
+                x={cx - drawSize * 0.72}
+                y={cy - 14}
+                width={drawSize * 1.44}
+                height={28}
+              >
+                <div xmlns="http://www.w3.org/1999/xhtml" className="hex-cell__name">{hex.name}</div>
+              </foreignObject>
             )}
             <polygon className="hex-cell__border" points={points} />
             {hex?.subMap && (

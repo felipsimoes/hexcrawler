@@ -1,11 +1,9 @@
+import { useState } from 'react'
 import { useI18n } from '../i18n'
 import type { HexCrawlerMap } from '../types/map'
 
 interface SectionEditorsProps {
   map: HexCrawlerMap
-  selectedHexId: number
-  onSelectHex: (id: number) => void
-  onUpdateHex: (id: number, patch: Partial<HexCrawlerMap['hexes'][number]>) => void
   onSetEncounter: (index: number, value: string) => void
   onSetRumour: (index: number, value: string) => void
   onUpdateFaction: (index: number, patch: Partial<HexCrawlerMap['factions'][number]>) => void
@@ -21,11 +19,10 @@ interface SectionEditorsProps {
   onRemoveFactionGoal: (factionIndex: number, goalIndex: number) => void
 }
 
+type SheetTab = 'encounters' | 'rumours' | 'factions'
+
 export function SectionEditors({
   map,
-  selectedHexId,
-  onSelectHex,
-  onUpdateHex,
   onSetEncounter,
   onSetRumour,
   onUpdateFaction,
@@ -37,41 +34,42 @@ export function SectionEditors({
   onRemoveFactionGoal,
 }: SectionEditorsProps) {
   const { t } = useI18n()
+  const [tab, setTab] = useState<SheetTab>('encounters')
 
   return (
     <div className="section-editors">
-      <section className="panel">
-        <h2>{t('sections.allLocations')}</h2>
-        <div className="location-list">
-          {map.hexes.map((hex) => (
-            <div
-              key={hex.id}
-              className={`location-item${hex.id === selectedHexId ? ' location-item--active' : ''}`}
-            >
-              <button type="button" className="location-item__select" onClick={() => onSelectHex(hex.id)}>
-                {hex.id}
-              </button>
-              <div className="location-item__fields">
-                <input
-                  type="text"
-                  value={hex.name}
-                  onChange={(e) => onUpdateHex(hex.id, { name: e.target.value })}
-                  placeholder={t('sections.locationNamePlaceholder', { id: hex.id })}
-                />
-                <textarea
-                  rows={2}
-                  value={hex.description}
-                  onChange={(e) => onUpdateHex(hex.id, { description: e.target.value })}
-                  placeholder={t('sections.descriptionPlaceholder')}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="sheet-tabs" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'encounters'}
+          className={tab === 'encounters' ? 'sheet-tabs__tab sheet-tabs__tab--active' : 'sheet-tabs__tab'}
+          onClick={() => setTab('encounters')}
+        >
+          {t('sections.encounters')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'rumours'}
+          className={tab === 'rumours' ? 'sheet-tabs__tab sheet-tabs__tab--active' : 'sheet-tabs__tab'}
+          onClick={() => setTab('rumours')}
+        >
+          {t('sections.rumours')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'factions'}
+          className={tab === 'factions' ? 'sheet-tabs__tab sheet-tabs__tab--active' : 'sheet-tabs__tab'}
+          onClick={() => setTab('factions')}
+        >
+          {t('sections.factions')}
+        </button>
+      </div>
 
-      <section className="panel">
-        <h2>{t('sections.encounters')}</h2>
+      {tab === 'encounters' && (
+      <section className="panel" role="tabpanel">
         <p className="panel-subtitle">{t('sections.encountersSubtitle')}</p>
         {map.encounters.map((encounter, index) => (
           <label key={index} className="field field--inline">
@@ -85,9 +83,10 @@ export function SectionEditors({
           </label>
         ))}
       </section>
+      )}
 
-      <section className="panel">
-        <h2>{t('sections.rumours')}</h2>
+      {tab === 'rumours' && (
+      <section className="panel" role="tabpanel">
         <p className="panel-subtitle">{t('sections.rumoursSubtitle')}</p>
         {map.rumours.map((rumour, index) => (
           <label key={index} className="field field--inline">
@@ -101,9 +100,10 @@ export function SectionEditors({
           </label>
         ))}
       </section>
+      )}
 
-      <section className="panel">
-        <h2>{t('sections.factions')}</h2>
+      {tab === 'factions' && (
+      <section className="panel" role="tabpanel">
         <div className="faction-editors">
           {map.factions.map((faction, fi) => (
             <div key={fi} className="faction-editor">
@@ -195,6 +195,7 @@ export function SectionEditors({
           ))}
         </div>
       </section>
+      )}
     </div>
   )
 }
